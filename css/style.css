@@ -373,41 +373,79 @@ h4 { font-size: 1.2rem; margin-bottom: var(--space-sm); }
 
 /* ─── MOBILE LAYOUT (≤ 767px) ───────────────────────────── */
 @media (max-width: 767px) {
-    html, body { overflow: hidden; height: 100%; }
 
+    html, body {
+        overflow: hidden;
+        height: 100%;
+        height: 100dvh; /* dynamic viewport for iOS Safari */
+    }
+
+    /* Switch from grid to flex column */
     .app-container {
         display: flex;
         flex-direction: column;
-        height: 100vh;
+        height: 100dvh;
         padding: 0;
         gap: 0;
         overflow: hidden;
     }
 
-    /* Top bar stays at top */
+    /* Top bar: always visible at top, never shrinks */
     .top-bar {
         flex-shrink: 0;
         height: var(--topbar-h);
         border-left: none;
         border-right: none;
         border-top: none;
+        border-radius: 0;
     }
 
-    /* Desktop sidebar hidden on mobile */
-    .sidebar { display: none; }
+    /* HIDE desktop sidebar completely */
+    .sidebar {
+        display: none !important;
+    }
 
-    /* Main content fills all remaining height */
+    /* Main content fills all remaining space */
     .main-content {
-        flex: 1;
+        flex: 1 1 auto;
+        min-height: 0;
         overflow: hidden;
+        position: relative;
     }
 
-    /* Right panel becomes a slide-up drawer */
+    /* Garden + Market views: fill height and allow scrolling */
+    .garden-area,
+    .market-area,
+    .leaderboard-area,
+    #view-admin {
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        bottom: 0;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+        padding: var(--space-sm);
+        padding-bottom: calc(var(--bottomnav-h) + 8px);
+    }
+
+    /* Garden grid: wrap tiles so they fill screen width */
+    .garden-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+    }
+
+    /* Plots slightly smaller on mobile */
+    .plot {
+        min-height: 70px;
+        font-size: 1.8rem;
+    }
+
+    /* Right panel (field info) becomes slide-up drawer */
     .action-panel {
         position: fixed;
         bottom: var(--bottomnav-h);
         left: 0; right: 0;
-        max-height: 50vh;
+        max-height: 55vh;
         border-left: none; border-right: none; border-bottom: none;
         border-radius: 0;
         box-shadow: 0 -4px 0 var(--wood-light);
@@ -415,6 +453,7 @@ h4 { font-size: 1.2rem; margin-bottom: var(--space-sm); }
         transform: translateY(100%);
         transition: transform 0.25s ease;
         overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
     .action-panel.open {
         transform: translateY(0);
@@ -446,6 +485,7 @@ h4 { font-size: 1.2rem; margin-bottom: var(--space-sm); }
     }
     .mobile-bottom-nav .nav-item {
         flex: 1;
+        display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
@@ -453,26 +493,28 @@ h4 { font-size: 1.2rem; margin-bottom: var(--space-sm); }
         color: var(--text-light);
         border: none;
         border-radius: 0;
-        font-size: 1rem;
-        padding: 4px;
+        font-size: 0.85rem;
+        padding: 4px 2px;
+        background: transparent;
     }
     .mobile-bottom-nav .nav-item.active {
         background: var(--wood-main);
-        border: none;
         border-top: 4px solid var(--gold);
-        box-shadow: none;
         color: var(--gold);
     }
-    .mobile-bottom-nav .nav-icon { font-size: 1.5rem; }
+    .mobile-bottom-nav .nav-icon { font-size: 1.4rem; }
 
-    /* Gold display prominent on mobile */
-    .stat-badge { font-size: 1.1rem; padding: 0.1rem 0.5rem; }
+    /* Stat badge */
+    .stat-badge { font-size: 1rem; padding: 0.1rem 0.4rem; }
 
-    /* Gardens & panels fill full height on mobile */
-    .garden-area, .market-area {
-        height: calc(100vh - var(--topbar-h) - var(--bottomnav-h));
+    /* Activity ticker: hide on very small screens to save space */
+    .activity-ticker { display: none; }
+
+    /* Modals: full screen on mobile */
+    .modal-content {
+        width: 95vw;
+        max-height: 85dvh;
         overflow-y: auto;
-        padding: var(--space-sm);
     }
 }
 
@@ -489,3 +531,4 @@ h4 { font-size: 1.2rem; margin-bottom: var(--space-sm); }
 @media (min-width: 768px) {
     .mobile-bottom-nav { display: none; }
 }
+
