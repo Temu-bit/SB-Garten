@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /garden_plots/{plotId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Profil: Jeder darf lesen (für Bestenliste), Nutzer dürfen nur ihr eigenes Profil bearbeiten
+    // Admin (timo410@icloud.com) darf alle Profile löschen
+    match /players/{userId} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+      allow delete: if request.auth != null && request.auth.token.email == 'timo410@icloud.com';
+    }
+    
+    // Aktivitäts-Feed: Jeder kann lesen, nur eingeloggte User schreiben
+    match /activity_feed/{logId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Shop-Lagerbestand (Dünger): Jeder lesen, eingeloggte User schreiben (Transaktionen)
+    match /shop_stock/{itemId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Ban-Liste: Jeder lesen (für Login-Check), nur Admin schreiben/löschen
+    match /banned_users/{email} {
+      allow read: if true;
+      allow write, delete: if request.auth != null && request.auth.token.email == 'timo410@icloud.com';
+    }
+  }
+}
