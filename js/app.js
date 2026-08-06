@@ -369,6 +369,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     async function renderShop() {
+        const scrollContainer = document.getElementById('view-market');
+        const savedScroll = scrollContainer ? scrollContainer.scrollTop : 0;
+
         shopSpecialEl.innerHTML = '';
         shopSeedsEl.innerHTML = '';
 
@@ -471,6 +474,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
             shopSeedsEl.appendChild(itemDiv);
+        }
+
+        if (scrollContainer) {
+            scrollContainer.scrollTop = savedScroll;
         }
     }
 
