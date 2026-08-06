@@ -462,7 +462,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     coins -= config.cost;
                     inventory[`seed_${emoji}`] = (inventory[`seed_${emoji}`] || 0) + 1;
                     updateInventoryUI();
-                    await renderShop();
+                    updateShopButtonsState();
                     await saveProfile();
                     audioService.playCoin();
                     if (currentUser) {
@@ -478,6 +478,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (scrollContainer) {
             scrollContainer.scrollTop = savedScroll;
+        }
+    }
+
+    function updateShopButtonsState() {
+        const fertBtn = shopSpecialEl.querySelector('.btn-buy');
+        if (fertBtn && !fertBtn.innerText.includes('Ausverkauft')) {
+            fertBtn.disabled = coins < 300;
+            fertBtn.innerText = coins < 300 ? 'Nicht genug Gold' : 'Kaufen';
+        }
+
+        const seedBtns = shopSeedsEl.querySelectorAll('.shop-item .btn-buy');
+        let idx = 0;
+        for (const [emoji, config] of Object.entries(PLANT_CONFIG)) {
+            const btn = seedBtns[idx++];
+            if (btn) {
+                btn.disabled = coins < config.cost;
+            }
         }
     }
 
