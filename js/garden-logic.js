@@ -278,7 +278,7 @@ export class GardenLogic {
                 isFertilized: false
             };
             this.plots[index] = updated;
-            await dbService.savePlotState(updated);
+            await dbService.savePlotState(this.currentPage, index, updated);
             this.renderGrid();
             return isRotted ? null : harvestedType;
         }
