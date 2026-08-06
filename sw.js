@@ -1,14 +1,14 @@
 const CACHE_NAME = 'sb-garten-v1';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/css/style.css',
-  '/css/components.css',
-  '/js/app.js',
-  '/js/garden-logic.js',
-  '/js/firebase-init.js',
-  '/js/audio.js',
-  '/assets/icon-512.png'
+  './',
+  './index.html',
+  './css/style.css',
+  './css/components.css',
+  './js/app.js',
+  './js/garden-logic.js',
+  './js/firebase-init.js',
+  './js/audio.js',
+  './assets/icon-512.png'
 ];
 
 // Install: cache all core assets
