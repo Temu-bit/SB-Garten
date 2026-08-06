@@ -554,8 +554,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             const canWaterNow = garden.canWater(plotData);
             btnWater.disabled = !canWaterNow || progress >= 100;
             btnWater.classList.toggle('btn-disabled', btnWater.disabled);
-            if (!canWaterNow && progress < 100) {
-                const remainingMin = Math.ceil(((plotData.lastWateredAt + 3600000) - Date.now()) / 60000);
+            
+            const weather = getCurrentWeather();
+            if (weather.type === 'rain' && progress < 100) {
+                btnWater.innerText = `🌧️ Wird beregnet`;
+            } else if (!canWaterNow && progress < 100) {
+                const remainingMin = Math.max(0, Math.ceil(((plotData.lastWateredAt + 3600000) - Date.now()) / 60000));
                 btnWater.innerText = `💧 (Warten: ${remainingMin}m)`;
             } else {
                 btnWater.innerText = `💧 Gießen (+10%)`;
